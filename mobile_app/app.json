@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "EA FC Players Analytics",
+    "slug": "ea-fc-players",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0e1a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0a0e1a"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "scheme": "telco-churn",
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
