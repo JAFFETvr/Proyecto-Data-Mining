@@ -16,20 +16,18 @@
     "work_rate",
     "body_type"
   ],
-  "target_value": "value_eur",
-  "target_elite": "is_elite",
   "metrics": {
     "linear_regression": {
-      "rmse": 0.812,
-      "r2": 0.3433
+      "rmse": 4569665.769822877,
+      "r2": 0.4663569990635754
     },
     "logistic_regression": {
-      "accuracy": 0.9815,
-      "auc": 0.9521
+      "accuracy": 0.9829931972789115,
+      "auc": 0.9783678861638608
     },
     "random_forest": {
-      "accuracy": 0.9905,
-      "auc": 0.9953
+      "accuracy": 0.9917355371900827,
+      "auc": 0.9944039431512163
     }
   }
 }

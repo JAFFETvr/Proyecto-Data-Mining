@@ -1,0 +1,220 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[table]{xcolor} 
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{float}
+\usepackage{multirow}
+
+\definecolor{negro}{HTML}{000000}
+\definecolor{grisoscuro}{HTML}{333333}
+\definecolor{grisclaro}{HTML}{F5F5F5}
+\definecolor{blanco}{HTML}{FFFFFF}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=negro,
+  urlcolor=negro,
+  citecolor=negro,
+  pdfauthor={Carlos Jaffet Vicente Rincon},
+  pdftitle={Proyecto Data Mining - EA Sports FC}
+}
+
+\titleformat{\section}
+  {\Large\bfseries\color{negro}}
+  {\thesection.}{0.5em}{}
+  [\nopagebreak\vspace{-2pt}\rule{\linewidth}{1pt}]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{negro}}
+  {\thesubsection}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{grisoscuro}}
+  {\thesubsubsection}{0.5em}{}
+
+\titlespacing*{\section}{0pt}{18pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{grisoscuro}\textit{Minería de Datos — UPCh 2026}}
+\fancyhead[R]{\small\color{grisoscuro}\textit{EA Sports FC Analytics}}
+\fancyfoot[C]{\small\color{grisoscuro}\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{negro}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\newcommand{\theadrow}[1]{%
+  \rowcolor{negro}\color{blanco}\bfseries #1
+}
+
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{imgbox}[1]{
+  colback=blanco,
+  colframe=negro,
+  fonttitle=\small\bfseries\color{blanco},
+  title={#1},
+  boxrule=1pt,
+  arc=0pt, 
+  left=6pt, right=6pt, top=8pt, bottom=8pt,
+  halign=center
+}
+
+\newtcolorbox{insightbox}[1]{
+  colback=grisclaro,
+  colframe=negro,
+  fonttitle=\bfseries\color{blanco},
+  title={#1},
+  boxrule=1pt,
+  arc=0pt,
+  left=8pt, right=8pt, top=8pt, bottom=8pt
+}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+  \includegraphics[height=2cm]{LogoUpChiapas.png}\\[8pt]
+  {\large\bfseries\color{negro} UNIVERSIDAD POLITÉCNICA DE CHIAPAS}\\[4pt]
+  {\small\color{grisoscuro} Ingeniería de Software \quad·\quad 9.o semestre \quad·\quad 2026A}
+
+  \vspace{2.5cm}
+
+  \colorbox{grisclaro}{%
+    \begin{minipage}{0.88\textwidth}
+      \vspace{1cm}
+      \centering
+      {\Large\bfseries\color{negro} Proyecto Data Mining — Corte 1}\\[12pt]
+      {\large\color{grisoscuro} Pipeline Full Stack: EA Sports FC Players Analytics}
+      \vspace{1cm}
+    \end{minipage}
+  }
+
+  \vspace{1.5cm}
+  {\itshape\color{grisoscuro} Bitácora de Decisiones Técnicas}
+
+  \vspace{2.5cm}
+
+  \begin{tabular}{@{}L{4cm}L{9cm}@{}}
+    \toprule
+    \rowcolor{grisclaro}\textbf{Autor}           & CARLOS JAFFET VICENTE RINCON \\
+    \textbf{Matrícula}                        & 233436 \\
+    \rowcolor{grisclaro}\textbf{Profesor}         & Ramsés Alejandro Camas Nájera, M.Sc. \\
+    \textbf{Fecha de entrega}                 & 2 de junio de 2026 \\
+    \rowcolor{grisclaro}\textbf{Asignatura}       & Minería de Datos \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Planteamiento y Dataset}
+
+Para el desarrollo del pipeline \textit{end-to-end}, seleccioné el dataset de **EA Sports FC (male\_players.csv)**. Elegí este conjunto de datos porque cumple con el rigor exigido en la rúbrica: contiene información real y suficientemente rica (más de 90 MB) sobre miles de jugadores de fútbol a nivel mundial, requiriendo un preprocesamiento cuidadoso debido a sus valores faltantes e inconsistencias naturales.
+
+El dataset me permite abordar matemáticamente las dos tareas requeridas:
+\begin{enumerate}
+    \item \textbf{Regresión:} ¿Es posible predecir el valor de mercado (\texttt{value\_eur}) de un jugador exclusivamente mediante sus características físicas y de rendimiento (velocidad, tiro, físico, etc.)?
+    \item \textbf{Clasificación:} ¿Se puede deducir si un jugador pertenece a la "Élite" mundial (definido como un \texttt{overall} $\ge 80$) enfrentando algoritmos de clasificación?
+\end{enumerate}
+
+\section{Decisiones Clave de Arquitectura y Datos}
+
+El proyecto está diseñado bajo un enfoque \textit{Full Stack} separado en cuatro capas bien definidas, asegurando modularidad y escalabilidad.
+
+\subsection{Capa de Datos (Data Warehouse en DuckDB)}
+Decidí implementar un **modelo dimensional en esquema estrella**. 
+Extraje la información cualitativa (nombres, ligas, nacionalidades, posición) hacia una tabla de dimensiones (\texttt{dim\_jugador}) y mantuve las métricas en la tabla de hechos (\texttt{fact\_stats}). 
+
+\textbf{Justificación:} Esta separación optimiza el motor de **DuckDB**, permitiéndome crear vistas OLAP precalculadas (\texttt{olap\_por\_liga}, \texttt{olap\_por\_posicion}). De esta manera, cuando la aplicación móvil demanda datos para los \textit{dashboards}, la base de datos responde en milisegundos sin calcular agregaciones pesadas en vivo.
+
+\subsection{Capa de Análisis (EDA) y Preprocesamiento}
+Al analizar los datos, detecté variables nulas que dañarían los modelos. 
+Las decisiones de preprocesamiento, programadas de manera reproducible en el pipeline, fueron:
+\begin{itemize}
+    \item Eliminar filas donde el \textit{target} (\texttt{value\_eur}) o el \texttt{overall} fuesen nulos.
+    \item Imputar con la mediana estadística aquellos valores de rendimiento (ej. \texttt{pace}, \texttt{shooting}) que suelen faltar en los porteros.
+    \item Crear explícitamente la variable binaria \texttt{elite} basándome en si el \texttt{overall} del jugador era mayor o igual a 80.
+\end{itemize}
+
+\subsection{Capa de Modelado y Prevención de Fuga de Datos}
+La prevención de la fuga de datos (\textit{Data Leakage}) fue la máxima prioridad metodológica.
+\textbf{Decisión crítica:} El paso de codificación (\texttt{LabelEncoder}) y escalado (\texttt{StandardScaler}) se ejecutó aislando primero el conjunto de entrenamiento mediante \texttt{train\_test\_split}. El \texttt{fit} del escalador aprendió únicamente de los datos de entrenamiento, y posteriormente se aplicó (\texttt{transform}) a los datos de evaluación, asegurando que el modelo se evaluara en un escenario del mundo real puro.
+
+En clasificación, enfrenté dos algoritmos:
+\begin{itemize}
+    \item \textbf{Regresión Logística:} Elegido por su velocidad y por ofrecer probabilidades interpretables.
+    \item \textbf{Random Forest:} Elegido por su capacidad de capturar relaciones no lineales complejas entre las estadísticas físicas de un jugador.
+\end{itemize}
+
+\subsection{Capa de Presentación (Clean Architecture)}
+Para exponer los modelos, no utilicé Streamlit, sino que desarrollé una **API REST en FastAPI** estructurada mediante Arquitectura Limpia (Puertos y Adaptadores). Esto permitió desacoplar totalmente a Scikit-Learn y DuckDB de la lógica de negocio. Posteriormente, consumí esta API desde una **Aplicación Móvil desarrollada en React Native (Expo)**, cumpliendo con el requisito de entregar un producto orientado a usuario final.
+
+\newpage
+\section{Resultados del Modelado e Inferencia en Vivo}
+
+\subsection{Métricas de Modelos (En datos de prueba)}
+\begin{itemize}
+    \item \textbf{Regresión Lineal (Valor de Mercado):} Logró un $R^2$ aceptable para la alta varianza del valor de los jugadores, aunque el RMSE indica un margen de error al estimar superestrellas debido a que el valor comercial también depende de marketing y fama, variables no incluidas en el modelo.
+    \item \textbf{Clasificación (Élite):} El modelo de \textbf{Random Forest} superó a la Regresión Logística. Random Forest alcanzó métricas impecables, capturando a la perfección qué umbrales estadísticos definen a un jugador de clase mundial.
+\end{itemize}
+
+\subsection{Pruebas de Inferencia desde el Frontend}
+A continuación, se anexan las capturas de pantalla tomadas directamente desde la aplicación móvil operando contra la API en tiempo real.
+
+\begin{imgbox}{Figura 1 — Formulario interactivo (Selección de Parámetros)}
+  \includegraphics[width=0.45\linewidth]{seleccionandoparametros.png}
+\end{imgbox}
+
+Al enviar los datos del formulario, la API procesa la inferencia en vivo y devuelve resultados categorizados por el modelo Random Forest:
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \begin{imgbox}{Figura 2 — Predicción de Jugador No Élite}
+    \includegraphics[width=0.9\linewidth]{PruebadeProbabilidaBaja.png}
+  \end{imgbox}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \begin{imgbox}{Figura 3 — Predicción de Jugador Élite}
+    \includegraphics[width=0.9\linewidth]{pruebaDeprobabilidadAlta.png}
+  \end{imgbox}
+\end{minipage}
+\end{figure}
+
+Como se observa, el sistema ajusta la estimación de valor y la probabilidad de élite de manera dinámica conforme se varían los atributos de rendimiento del jugador.
+
+\section{Limitaciones y Trabajo Futuro}
+
+Soy completamente honesto respecto a las limitaciones estructurales de este pipeline:
+\begin{enumerate}
+    \item \textbf{Sesgo del Modelo Lineal en Extremos:} La Regresión Lineal falla al estimar el valor de mercado de jugadores superestrellas (ej. Mbappé, Haaland). El valor en el fútbol real tiene una curva exponencial en la élite, mientras que el modelo traza una línea recta. Lo ideal a futuro sería aplicar logaritmos al \textit{target} o utilizar modelos Gradient Boosting (XGBoost) para la regresión.
+    \item \textbf{Características Limitadas:} Para la API utilicé únicamente 15 parámetros (físicos y de habilidades). Sin embargo, variables como la edad, la liga actual y el equipo en el que juegan afectan radicalmente su valor real. La simplificación del formulario asume que un jugador con estadísticas iguales valdrá lo mismo en México que en Inglaterra, lo cual en la realidad es falso.
+    \item \textbf{Naturaleza Estática:} El modelo refleja los valores de un año específico de EA Sports FC. Para mantener su relevancia, el Data Warehouse requeriría una inyección temporalizada (Time Series) que contemple cómo se devalúan los jugadores año con año.
+\end{enumerate}
+
+\end{document}
